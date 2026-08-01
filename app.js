@@ -681,13 +681,16 @@ function handleRouteDestination(lat, lng, name) {
 
 async function fetchRoute(lat1, lng1, lat2, lng2) {
     try {
-        const url = `https://router.project-osrm.org/route/v1/foot/${lng1},${lat1};${lng2},${lat2}?overview=full&geometries=geojson`;
+        // OpenRouteService — foot-walking profile (handles campus paths)
+        const ORS_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjNlOGRiZTAyNWM2NDQwYWY4MzY5MmQzYjQ3OTYxMjE5IiwiaCI6Im11cm11cjY0In0=';
+        const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${ORS_KEY}&start=${lng1},${lat1}&end=${lng2},${lat2}`;
         const res = await fetch(url);
         const data = await res.json();
 
-        if (data.routes && data.routes.length > 0) {
-            const route = data.routes[0];
+        if (data.features && data.features.length > 0) {
+            const route = data.features[0];
             const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+            const summary = route.properties.summary;
 
             // Draw route line
             L.polyline(coords, {
@@ -696,22 +699,21 @@ async function fetchRoute(lat1, lng1, lat2, lng2) {
             }).addTo(routeLayer);
 
             // Show distance and time
-            const distM = route.distance;
+            const distM = summary.distance;
             const distText = distM < 1000 ? `${Math.round(distM)} m` : `${(distM / 1000).toFixed(1)} km`;
-            // Calculate walking time ourselves (avg 5 km/h = 83m/min)
-            const walkMin = Math.round(distM / 83);
+            const walkMin = Math.round(summary.duration / 60);
             const timeText = walkMin < 1 ? '< 1 min' : `${walkMin} min`;
             document.getElementById('route-distance').textContent = distText;
             document.getElementById('route-time').textContent = timeText;
             routeDetails.classList.remove('hidden');
             routeClear.classList.remove('hidden');
             routeInfo.textContent = '';
-            routePanel.classList.remove('hidden'); // always show after route calculated
+            routePanel.classList.remove('hidden');
 
             // Fit map to route
             map.fitBounds(L.polyline(coords).getBounds(), { padding: [50, 50] });
 
-            routingMode = false; // done, no more taps needed
+            routingMode = false;
         } else {
             routeInfo.textContent = 'No route found. Try a different destination.';
         }
