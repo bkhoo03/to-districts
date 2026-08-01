@@ -413,13 +413,13 @@ const UOFT_CAMPUS_BOUNDARY = [
 
 // ---- My Class Buildings ----
 const MY_CLASS_BUILDINGS = [
-    { name: "MC — McLennan Physical Labs", lat: 43.6608, lng: -79.3985, cat: "myclasses" },
-    { name: "GB — Galbraith Building", lat: 43.6599, lng: -79.3962, cat: "myclasses" },
-    { name: "SF — Sandford Fleming Building", lat: 43.6601, lng: -79.3955, cat: "myclasses" },
-    { name: "BA — Bahen Centre", lat: 43.6598, lng: -79.3972, cat: "myclasses" },
-    { name: "MB — Lassonde Mining Building", lat: 43.6595, lng: -79.3934, cat: "myclasses" },
-    { name: "SM — Sigmund Samuel Library", lat: 43.6621, lng: -79.3937, cat: "myclasses" },
-    { name: "MY — Myhal Centre", lat: 43.6608, lng: -79.3965, cat: "myclasses" }
+    { name: "McLennan Physical Laboratories (MC)", lat: 43.6608, lng: -79.3985, cat: "myclasses" },
+    { name: "Galbraith Building (GB)", lat: 43.6599, lng: -79.3962, cat: "myclasses" },
+    { name: "Sandford Fleming Building (SF)", lat: 43.6601, lng: -79.3955, cat: "myclasses" },
+    { name: "Bahen Centre for Information Technology (BA)", lat: 43.6598, lng: -79.3972, cat: "myclasses" },
+    { name: "Lassonde Mining Building (MB)", lat: 43.6595, lng: -79.3934, cat: "myclasses" },
+    { name: "Sigmund Samuel Library (SM)", lat: 43.6621, lng: -79.3937, cat: "myclasses" },
+    { name: "Myhal Centre for Engineering (MY)", lat: 43.6608, lng: -79.3965, cat: "myclasses" }
 ];
 
 POINTS_OF_INTEREST.push(...MY_CLASS_BUILDINGS.map(p => ({ ...p, district: "Annex - U of T" })));
