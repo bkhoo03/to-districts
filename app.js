@@ -989,6 +989,7 @@ showPlaceInfo = function(name, sub, districtName) {
     searchLayer.eachLayer(l => { if (l.getLatLng) { lat = l.getLatLng().lat; lng = l.getLatLng().lng; } });
     currentInfoPlace = lat ? { name, sub: sub || '', lat, lng } : null;
     updateSaveButton();
+    showDirectionsButton();
 };
 
 const _origShowPoiInfo = showPoiInfo;
@@ -996,13 +997,15 @@ showPoiInfo = function(poi, district) {
     _origShowPoiInfo(poi, district);
     currentInfoPlace = { name: poi.name, sub: POI_CATEGORIES[poi.cat].label, lat: poi.lat, lng: poi.lng };
     updateSaveButton();
+    showDirectionsButton();
 };
 
 const _origShowDistrictInfo = showDistrictInfo;
 showDistrictInfo = function(district) {
     _origShowDistrictInfo(district);
-    currentInfoPlace = null; // districts can't be saved
+    currentInfoPlace = null;
     updateSaveButton();
+    showDirectionsButton();
 };
 
 // Saved places panel
