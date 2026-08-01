@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#e8f0f6">
+    <title>TO Districts — Downtown Toronto Neighbourhood Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="">
+    <div id="app">
+        <header id="header">
+            <h1>🍁 TO Districts</h1>
+            <div class="header-actions">
+                <button id="layers-toggle" class="icon-btn" aria-label="Toggle map layers">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                </button>
+                <button id="search-toggle" class="icon-btn" aria-label="Toggle search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <div id="search-panel" class="hidden">
+            <div class="search-input-wrap">
+                <input type="text" id="search-input" placeholder="Search anywhere — places, restaurants, addresses…" autocomplete="off" aria-label="Search" />
+                <span id="search-spinner" class="hidden"></span>
+            </div>
+            <ul id="search-results" role="listbox"></ul>
+            <p id="search-hint">Searches this map plus live results from OpenStreetMap.</p>
+        </div>
+
+        <!-- Layers control -->
+        <div id="layers-panel" class="hidden" role="menu" aria-label="Map layers">
+            <h3>Base Map</h3>
+            <div class="basemap-row">
+                <button class="basemap-btn" data-base="dark">Dark</button>
+                <button class="basemap-btn active" data-base="detailed">Detailed</button>
+                <button class="basemap-btn" data-base="satellite">Satellite</button>
+                <button class="basemap-btn" data-base="light">Light</button>
+            </div>
+
+            <div class="layer-divider"></div>
+            <h3>Map Layers</h3>
+            <label class="layer-row">
+                <input type="checkbox" id="toggle-districts" checked>
+                <span>District overlays</span>
+            </label>
+            <label class="layer-row">
+                <input type="checkbox" id="toggle-labels" checked>
+                <span>District labels</span>
+            </label>
+            <label class="layer-row">
+                <input type="checkbox" id="toggle-subway" checked>
+                <span>Subway lines &amp; stations</span>
+            </label>
+
+            <div class="layer-divider"></div>
+            <h3>Points of Interest</h3>
+            <div id="poi-toggles"></div>
+
+            <div class="layer-divider"></div>
+            <h3>Legend</h3>
+            <div id="legend-content">
+                <div class="legend-group">
+                    <span class="legend-subhead">Subway</span>
+                    <div class="legend-item"><span class="line-swatch" style="background:#f8c300"></span> Line 1 (Yonge-University)</div>
+                    <div class="legend-item"><span class="line-swatch" style="background:#00923f"></span> Line 2 (Bloor-Danforth)</div>
+                    <div class="legend-item"><span class="station-swatch"></span> Station</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="map" role="application" aria-label="Interactive map of downtown Toronto"></div>
+
+        <div id="info-panel" class="hidden" role="dialog" aria-label="Location information">
+            <button id="info-close" aria-label="Close info panel">&times;</button>
+            <button id="info-save" aria-label="Save this place">⭐</button>
+            <h2 id="info-title"></h2>
+            <p id="info-description"></p>
+            <div id="info-highlights"></div>
+            <button id="info-directions" class="directions-btn hidden">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>Directions
+            </button>
+        </div>
+
+        <div id="route-panel" class="hidden" role="dialog" aria-label="Route directions">
+            <button id="route-close" aria-label="Close route">&times;</button>
+            <h3 id="route-title">Choose destination</h3>
+            <p id="route-info">Tap the map or search for a destination.</p>
+            <div id="route-details" class="hidden">
+                <span id="route-distance"></span> · <span id="route-time"></span> walking
+            </div>
+            <button id="route-clear" class="hidden">Clear route</button>
+        </div>
+
+        <button id="districts-list-btn" aria-label="Browse all neighbourhoods">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Districts
+        </button>
+        <button id="saved-places-btn" aria-label="Saved places">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" style="vertical-align:-2px;margin-right:4px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Saved
+        </button>
+
+        <div id="districts-list-panel" class="hidden" role="complementary" aria-label="All neighbourhoods">
+            <h3>All Neighbourhoods</h3>
+            <ul id="districts-list"></ul>
+        </div>
+
+        <div id="saved-places-panel" class="hidden" role="complementary" aria-label="Saved places">
+            <div class="saved-header">
+                <h3>Saved Places</h3>
+                <label class="layer-row compact">
+                    <input type="checkbox" id="toggle-saved" checked>
+                    <span>Show on map</span>
+                </label>
+            </div>
+            <ul id="saved-list"></ul>
+            <p id="saved-empty">No saved places yet. Search for a place and tap ⭐ to save it.</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="districts.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
