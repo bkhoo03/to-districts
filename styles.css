@@ -423,3 +423,11 @@ body.routing-active #map {
     border-width: 2.5px;
     box-shadow: 0 0 0 1.5px #e63946, 0 2px 4px rgba(0,0,0,0.4);
 }
+
+/* Route loading spinner */
+.route-spinner {
+    display: inline-block; width: 12px; height: 12px;
+    border: 2px solid #ddd; border-top-color: #1a73e8;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+    vertical-align: middle; margin-right: 6px;
+}

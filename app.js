@@ -673,9 +673,10 @@ function handleRouteDestination(lat, lng, name) {
     }).addTo(routeLayer);
 
     routeTitle.textContent = `${routeOrigin.name} → ${name || 'Destination'}`;
-    routeInfo.textContent = 'Calculating route...';
+    routeInfo.innerHTML = '<span class="route-spinner"></span> Calculating route…';
+    routePanel.classList.remove('hidden');
 
-    // Fetch walking route from OSRM
+    // Fetch walking route
     fetchRoute(routeOrigin.lat, routeOrigin.lng, lat, lng);
 }
 
