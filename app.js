@@ -289,8 +289,16 @@ function closeAllPanels() {
     savedPlacesPanel.classList.add('hidden');
     timetablePanel.classList.add('hidden');
     timetablePanel.classList.remove('minimised');
+    routePanel.classList.add('hidden');
     highlightLayer.clearLayers();
     searchLayer.clearLayers();
+    // Exit routing mode if active
+    if (routingMode || document.body.classList.contains('routing-active')) {
+        routingMode = false;
+        routeOrigin = null;
+        routeLayer.clearLayers();
+        document.body.classList.remove('routing-active');
+    }
 }
 
 function highlightLocation(lat, lng) {
