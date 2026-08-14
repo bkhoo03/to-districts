@@ -460,7 +460,7 @@ body.dark-base #timetable-btn {
     background: #fff; color: #1a1a1a;
     padding: 20px; border-radius: 14px; z-index: 1010;
     box-shadow: 0 12px 40px rgba(0,0,0,0.25); border: 1px solid #e0e0e0;
-    width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto;
+    width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 #timetable-panel.hidden { display: none; }
@@ -539,14 +539,15 @@ body.dark-base .tt-mod-session { color: #8b949e; }
 .tt-mod-type { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: #e0e0e0; margin-right: 4px; }
 body.dark-base .tt-mod-type { background: #30363d; color: #c9d1d9; }
 
-/* Timetable minimised state — compact bottom-left */
+/* Timetable minimised state — bottom bar, same width as panel */
 #timetable-panel.minimised {
-    top: auto; bottom: 56px; left: 12px; right: auto;
-    transform: none;
-    height: 40px; width: auto; max-width: 220px;
-    overflow: hidden; border-radius: 20px;
-    padding: 10px 16px; cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    top: auto; bottom: 0; left: 50%; right: auto;
+    transform: translateX(-50%);
+    height: 44px; width: 90%; max-width: 480px;
+    overflow: hidden; border-radius: 14px 14px 0 0;
+    padding: 12px 16px; cursor: pointer;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
+    z-index: 1010;
 }
 #timetable-panel.minimised::after {
     content: 'Tap to expand'; position: absolute; right: 16px; top: 14px;

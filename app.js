@@ -224,6 +224,11 @@ function showPlaceInfo(name, typeLabel, districtName) {
 
 document.getElementById('info-close').addEventListener('click', () => {
     clearSelection();
+    // If timetable is minimised, expand it back
+    if (timetablePanel.classList.contains('minimised')) {
+        timetablePanel.classList.remove('minimised');
+        searchLayer.clearLayers();
+    }
 });
 
 // Close info panel on any map click
