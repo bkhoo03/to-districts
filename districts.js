@@ -413,7 +413,7 @@ const UOFT_CAMPUS_BOUNDARY = [
 
 // ---- My Class Buildings ----
 const MY_CLASS_BUILDINGS = [
-    { name: "MC | McLennan Physical Laboratories", lat: 43.6608, lng: -79.3985, cat: "myclasses" },
+    { name: "MC | Mechanical Engineering Building", lat: 43.6601, lng: -79.3941, cat: "myclasses" },
     { name: "GB | Galbraith Building", lat: 43.6599, lng: -79.3962, cat: "myclasses" },
     { name: "SF | Sandford Fleming Building", lat: 43.6601, lng: -79.3955, cat: "myclasses" },
     { name: "BA | Bahen Centre for Information Technology", lat: 43.6598, lng: -79.3972, cat: "myclasses" },
