@@ -484,3 +484,16 @@ body.dark-base #timetable-btn {
 .course-item .ci-code { font-weight: 700; }
 .course-item .ci-time { color: #555; }
 .course-item .ci-room { color: #888; font-size: 0.72rem; }
+
+/* Dark mode for course items and timetable */
+body.dark-base .course-item { background: #21262d; border-left-color: #58a6ff; }
+body.dark-base .course-item .ci-code { color: #f0f6fc; }
+body.dark-base .course-item .ci-time { color: #8b949e; }
+body.dark-base .course-item .ci-room { color: #6e7681; }
+body.dark-base #timetable-panel { background: #161b22; color: #f0f6fc; border-color: #21262d; }
+body.dark-base #timetable-close { background: #21262d; color: #8b949e; }
+body.dark-base .tt-day-name { color: #58a6ff; }
+body.dark-base .tt-slot { border-color: #21262d; }
+body.dark-base .tt-time { color: #8b949e; }
+body.dark-base .tt-room { color: #6e7681; }
+body.dark-base .tt-empty { color: #484f58; }

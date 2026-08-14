@@ -415,7 +415,6 @@ const UOFT_CAMPUS_BOUNDARY = [
 const MY_CLASS_BUILDINGS = [
     { name: "MC | Mechanical Engineering Building", lat: 43.6601, lng: -79.3941, cat: "myclasses" },
     { name: "GB | Galbraith Building", lat: 43.6599, lng: -79.3962, cat: "myclasses" },
-    { name: "SF | Sandford Fleming Building", lat: 43.6601, lng: -79.3955, cat: "myclasses" },
     { name: "BA | Bahen Centre for Information Technology", lat: 43.6598, lng: -79.3972, cat: "myclasses" },
     { name: "MB | Lassonde Mining Building", lat: 43.6595, lng: -79.3934, cat: "myclasses" },
     { name: "SM | Sigmund Samuel Library", lat: 43.6621, lng: -79.3937, cat: "myclasses" },
@@ -446,8 +445,7 @@ const MY_COURSES = {
     "GB": [
         { code: "MIE370H1", name: "Intro to Machine Learning", time: "Tue 3–5PM (PRA)", room: "GB 119 / GB 144" },
         { code: "TEP440H1", name: "To Engineer is Human", time: "Mon 1–3PM / Thu 1–3PM", room: "GB 304" }
-    ],
-    "SF": []
+    ]
 };
 
 // Full timetable for the popup
