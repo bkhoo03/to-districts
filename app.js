@@ -1,8 +1,14 @@
 // ---------------------------------------------------------------------------
 // Map setup
 // ---------------------------------------------------------------------------
-// Restore saved position or use defaults
-const savedMapState = JSON.parse(localStorage.getItem('to-districts-map-state') || 'null');
+// Restore saved position or use defaults (expires after 30 minutes)
+const savedMapState = (() => {
+    try {
+        const data = JSON.parse(localStorage.getItem('to-districts-map-state'));
+        if (data && Date.now() - data.timestamp < 30 * 60 * 1000) return data;
+    } catch {}
+    return null;
+})();
 const initCenter = savedMapState ? [savedMapState.lat, savedMapState.lng] : [43.6510, -79.3870];
 const initZoom = savedMapState ? savedMapState.zoom : 14;
 
@@ -16,11 +22,11 @@ const map = L.map('map', {
     wheelPxPerZoomLevel: 60
 });
 
-// Save map position on every move/zoom
+// Save map position on every move/zoom (with timestamp)
 map.on('moveend', () => {
     const c = map.getCenter();
     localStorage.setItem('to-districts-map-state', JSON.stringify({
-        lat: c.lat, lng: c.lng, zoom: map.getZoom()
+        lat: c.lat, lng: c.lng, zoom: map.getZoom(), timestamp: Date.now()
     }));
 });
 
