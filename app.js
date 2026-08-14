@@ -1076,7 +1076,7 @@ function renderTimetable() {
             const buildingCode = link.dataset.building;
             const b = getBuildingLatLng(buildingCode);
             if (b) {
-                // Minimise timetable panel with animation
+                // Minimise timetable panel (glides down)
                 timetablePanel.classList.add('minimised');
 
                 // Fly to building
@@ -1084,20 +1084,18 @@ function renderTimetable() {
 
                 // Highlight the building with a pulsing circle
                 searchLayer.clearLayers();
-                const pulse = L.circleMarker([b.lat, b.lng], {
+                L.circleMarker([b.lat, b.lng], {
                     radius: 18, color: '#e63946', weight: 3,
                     fillColor: '#e63946', fillOpacity: 0.15,
                     className: 'pulse-marker'
                 }).addTo(searchLayer);
 
-                // Also add a label
-                L.marker([b.lat, b.lng], {
-                    icon: L.divIcon({
-                        className: 'highlight-label',
-                        html: `<span>${b.name}</span>`,
-                        iconSize: [0, 0], iconAnchor: [0, -24]
-                    })
-                }).addTo(searchLayer);
+                // Show the building info panel
+                const poi = POINTS_OF_INTEREST.find(p => p.name.startsWith(buildingCode + ' |'));
+                if (poi) {
+                    const district = DISTRICTS.find(d => d.name === poi.district);
+                    showPoiInfo(poi, district);
+                }
             }
         });
     });
