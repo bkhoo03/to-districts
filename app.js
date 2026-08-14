@@ -168,6 +168,10 @@ POINTS_OF_INTEREST.forEach((poi) => {
             handleRouteDestination(poi.lat, poi.lng, poi.name);
             return;
         }
+        // Close timetable if it was in minimised/location mode
+        timetablePanel.classList.add('hidden');
+        timetablePanel.classList.remove('minimised');
+
         const district = DISTRICTS.find(d => d.name === poi.district);
         showPoiInfo(poi, district);
         highlightLocation(poi.lat, poi.lng);
@@ -226,10 +230,11 @@ function showPlaceInfo(name, typeLabel, districtName) {
 
 document.getElementById('info-close').addEventListener('click', () => {
     clearSelection();
-    // If timetable is minimised, expand it back
-    if (timetablePanel.classList.contains('minimised')) {
-        timetablePanel.classList.remove('minimised');
+    // If timetable was minimised (we came from timetable), expand it back
+    if (!timetablePanel.classList.contains('hidden') && timetablePanel.classList.contains('minimised')) {
+        highlightLayer.clearLayers();
         searchLayer.clearLayers();
+        timetablePanel.classList.remove('minimised');
     }
 });
 
@@ -263,10 +268,24 @@ map.on('click', (e) => {
 function clearSelection() {
     infoPanel.classList.add('hidden');
     highlightLayer.clearLayers();
+    searchLayer.clearLayers();
     if (activeDistrict) {
         activeDistrict.setStyle({ fillOpacity: 0.18, weight: 1.5 });
         activeDistrict = null;
     }
+}
+
+// Central function: close everything, reset all modes
+function closeAllPanels() {
+    clearSelection();
+    searchPanel.classList.add('hidden');
+    layersPanel.classList.add('hidden');
+    dlPanel.classList.add('hidden');
+    savedPlacesPanel.classList.add('hidden');
+    timetablePanel.classList.add('hidden');
+    timetablePanel.classList.remove('minimised');
+    highlightLayer.clearLayers();
+    searchLayer.clearLayers();
 }
 
 function highlightLocation(lat, lng) {
@@ -286,11 +305,8 @@ const layersPanel = document.getElementById('layers-panel');
 
 layersToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    layersPanel.classList.toggle('hidden');
-    searchPanel.classList.add('hidden');
-    routePanel.classList.add('hidden');
-    dlPanel.classList.add('hidden');
-    savedPlacesPanel.classList.add('hidden');
+    closeAllPanels();
+    layersPanel.classList.remove('hidden');
 });
 
 function bindToggle(id, layer) {
@@ -322,21 +338,13 @@ const searchResults = document.getElementById('search-results');
 const searchSpinner = document.getElementById('search-spinner');
 
 searchToggle.addEventListener('click', () => {
-    searchPanel.classList.toggle('hidden');
-    layersPanel.classList.add('hidden');
-    dlPanel.classList.add('hidden');
-    savedPlacesPanel.classList.add('hidden');
-    // Temporarily hide route panel while searching, but don't destroy it
-    if (!searchPanel.classList.contains('hidden')) {
+    const wasOpen = !searchPanel.classList.contains('hidden');
+    closeAllPanels();
+    if (!wasOpen) {
+        searchPanel.classList.remove('hidden');
+        // Temporarily hide route panel while searching
         routePanel.classList.add('hidden');
         searchInput.focus();
-    } else {
-        searchInput.value = '';
-        searchResults.innerHTML = '';
-        // Bring route panel back if route is active
-        if (routingMode || document.body.classList.contains('routing-active')) {
-            routePanel.classList.remove('hidden');
-        }
     }
 });
 
@@ -1137,9 +1145,7 @@ function renderTimetable() {
 // Render immediately on button click
 timetableBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    layersPanel.classList.add('hidden');
-    dlPanel.classList.add('hidden');
-    savedPlacesPanel.classList.add('hidden');
+    closeAllPanels();
     timetablePanel.classList.remove('hidden');
     timetablePanel.classList.remove('minimised');
     renderTimetable();
@@ -1158,6 +1164,10 @@ document.querySelectorAll('.tt-tab').forEach(tab => {
 // Click minimised panel to expand
 timetablePanel.addEventListener('click', () => {
     if (timetablePanel.classList.contains('minimised')) {
+        // Exiting location mode — clear everything and expand timetable
+        clearSelection();
+        searchLayer.clearLayers();
+        highlightLayer.clearLayers();
         timetablePanel.classList.remove('minimised');
     }
 });
