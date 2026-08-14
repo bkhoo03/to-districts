@@ -245,7 +245,6 @@ map.on('click', (e) => {
     // If in routing mode, set destination
     if (routingMode) {
         const { lat, lng } = e.latlng;
-        // Quick reverse geocode for destination name
         fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=18`, { headers: { 'User-Agent': 'TODistricts' } })
             .then(r => r.json())
             .then(data => {
@@ -254,6 +253,12 @@ map.on('click', (e) => {
             })
             .catch(() => handleRouteDestination(lat, lng, 'Destination'));
         return;
+    }
+
+    // If timetable is minimised (location mode), exit timetable entirely
+    if (!timetablePanel.classList.contains('hidden')) {
+        timetablePanel.classList.add('hidden');
+        timetablePanel.classList.remove('minimised');
     }
 
     // If zoomed in (districts hidden), drop a pin and reverse-geocode
@@ -750,8 +755,8 @@ async function fetchRoute(lat1, lng1, lat2, lng2) {
             routeInfo.textContent = '';
             routePanel.classList.remove('hidden');
 
-            // Fit map to route
-            map.fitBounds(L.polyline(coords).getBounds(), { padding: [50, 50] });
+            // Fit map to route — gentle, don't zoom in too much
+            map.fitBounds(L.polyline(coords).getBounds(), { padding: [60, 60], maxZoom: 16 });
 
             routingMode = false;
         } else {
@@ -922,7 +927,7 @@ function renderSavedMarkers() {
                 className: 'saved-pin-wrap',
                 html: `<span class="saved-pin"></span>`,
                 iconSize: [12, 16],
-                iconAnchor: [6, 16]
+                iconAnchor: [6, 8]
             })
         });
         m.bindTooltip(p.name, { direction: 'top', className: 'map-tooltip', offset: [0, -10] });
