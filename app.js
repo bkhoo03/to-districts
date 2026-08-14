@@ -5,7 +5,7 @@
 const savedMapState = (() => {
     try {
         const data = JSON.parse(localStorage.getItem('to-districts-map-state'));
-        if (data && Date.now() - data.timestamp < 30 * 60 * 1000) return data;
+        if (data && Date.now() - data.timestamp < 10 * 60 * 1000) return data;
     } catch {}
     return null;
 })();
