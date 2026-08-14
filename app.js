@@ -1,14 +1,27 @@
 // ---------------------------------------------------------------------------
 // Map setup
 // ---------------------------------------------------------------------------
+// Restore saved position or use defaults
+const savedMapState = JSON.parse(localStorage.getItem('to-districts-map-state') || 'null');
+const initCenter = savedMapState ? [savedMapState.lat, savedMapState.lng] : [43.6510, -79.3870];
+const initZoom = savedMapState ? savedMapState.zoom : 14;
+
 const map = L.map('map', {
-    center: [43.6510, -79.3870],
-    zoom: 14,
+    center: initCenter,
+    zoom: initZoom,
     zoomControl: false,
     attributionControl: true,
     zoomSnap: 0.25,
     zoomDelta: 1,
     wheelPxPerZoomLevel: 60
+});
+
+// Save map position on every move/zoom
+map.on('moveend', () => {
+    const c = map.getCenter();
+    localStorage.setItem('to-districts-map-state', JSON.stringify({
+        lat: c.lat, lng: c.lng, zoom: map.getZoom()
+    }));
 });
 
 L.control.zoom({ position: 'topright' }).addTo(map);
@@ -30,7 +43,10 @@ const BASE_MAPS = {
         attribution: '&copy; OSM &copy; CARTO', subdomains: 'abcd', maxZoom: 20
     })
 };
-let currentBase = BASE_MAPS.detailed.addTo(map);
+const savedBase = localStorage.getItem('to-districts-basemap') || 'detailed';
+let currentBase = BASE_MAPS[savedBase].addTo(map);
+if (savedBase === 'dark') document.body.classList.add('dark-base');
+if (savedBase === 'satellite') document.body.classList.add('sat-mode');
 
 function setBaseMap(key) {
     if (BASE_MAPS[key] === currentBase) return;
@@ -41,6 +57,7 @@ function setBaseMap(key) {
     const isSat = key === 'satellite';
     document.body.classList.toggle('dark-base', isDark);
     document.body.classList.toggle('sat-mode', isSat);
+    localStorage.setItem('to-districts-basemap', key);
     updateOverlayForZoom(); // re-apply zoom-based styling for new base
 }
 
@@ -334,6 +351,8 @@ bindToggle('toggle-subway', subwayLayer);
 
 // Base map buttons
 document.querySelectorAll('.basemap-btn').forEach(btn => {
+    // Set correct active state on load
+    btn.classList.toggle('active', btn.dataset.base === savedBase);
     btn.addEventListener('click', () => {
         document.querySelectorAll('.basemap-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
