@@ -1047,7 +1047,7 @@ function getBuildingLatLng(code) {
 function renderTimetable() {
     if (ttCurrentView === 'days') {
         timetableContent.innerHTML = FULL_TIMETABLE.map(day => {
-            if (day.slots.length === 0) {
+            if (!day.slots || day.slots.length === 0) {
                 return `<div class="tt-day"><div class="tt-day-name">${day.day}</div><div class="tt-empty">No classes</div></div>`;
             }
             return `<div class="tt-day"><div class="tt-day-name">${day.day}</div>${
@@ -1076,23 +1076,22 @@ function renderTimetable() {
             const buildingCode = link.dataset.building;
             const b = getBuildingLatLng(buildingCode);
             if (b) {
-                // Minimise timetable panel
                 timetablePanel.classList.add('minimised');
-                // Fly to building
                 map.setView([b.lat, b.lng], 17);
             }
         });
     });
 }
 
+// Render immediately on button click
 timetableBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     layersPanel.classList.add('hidden');
     dlPanel.classList.add('hidden');
     savedPlacesPanel.classList.add('hidden');
-    renderTimetable();
     timetablePanel.classList.remove('hidden');
     timetablePanel.classList.remove('minimised');
+    renderTimetable();
 });
 
 // Tab switching
