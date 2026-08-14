@@ -1,0 +1,12 @@
+{
+  "name": "TO Districts",
+  "short_name": "TO Districts",
+  "description": "Downtown Toronto neighbourhood map",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a73e8",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
