@@ -1031,6 +1031,64 @@ document.getElementById('toggle-saved').addEventListener('change', (e) => {
 map.on('click', () => { savedPlacesPanel.classList.add('hidden'); });
 map.on('movestart', () => { savedPlacesPanel.classList.add('hidden'); });
 
+// ---------------------------------------------------------------------------
+// Timetable popup
+// ---------------------------------------------------------------------------
+const timetableBtn = document.getElementById('timetable-btn');
+const timetablePanel = document.getElementById('timetable-panel');
+const timetableContent = document.getElementById('timetable-content');
+
+timetableBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    layersPanel.classList.add('hidden');
+    dlPanel.classList.add('hidden');
+    savedPlacesPanel.classList.add('hidden');
+
+    // Render timetable
+    timetableContent.innerHTML = FULL_TIMETABLE.map(day => {
+        if (day.slots.length === 0) {
+            return `<div class="tt-day"><div class="tt-day-name">${day.day}</div><div class="tt-empty">No classes</div></div>`;
+        }
+        return `<div class="tt-day"><div class="tt-day-name">${day.day}</div>${
+            day.slots.map(s => `<div class="tt-slot">
+                <span class="tt-time">${s.time}</span>
+                <span class="tt-course"><span class="tt-code">${s.code}</span> ${s.name}<br><span class="tt-room">${s.room}</span></span>
+            </div>`).join('')
+        }</div>`;
+    }).join('');
+
+    timetablePanel.classList.remove('hidden');
+});
+
+document.getElementById('timetable-close').addEventListener('click', () => {
+    timetablePanel.classList.add('hidden');
+});
+map.on('click', () => { timetablePanel.classList.add('hidden'); });
+map.on('movestart', () => { timetablePanel.classList.add('hidden'); });
+
+// ---------------------------------------------------------------------------
+// Show course info when tapping a class building
+// ---------------------------------------------------------------------------
+const _origShowPoiInfo2 = showPoiInfo;
+showPoiInfo = function(poi, district) {
+    _origShowPoiInfo2(poi, district);
+
+    // Check if this is a class building and show courses
+    if (poi.cat === 'myclasses') {
+        const code = poi.name.split(' | ')[0]; // e.g. "MC"
+        const courses = MY_COURSES[code] || [];
+        if (courses.length > 0) {
+            document.getElementById('info-highlights').innerHTML = `<div class="course-list">${
+                courses.map(c => `<div class="course-item">
+                    <span class="ci-code">${c.code}</span> — ${c.name}<br>
+                    <span class="ci-time">${c.time}</span><br>
+                    <span class="ci-room">${c.room}</span>
+                </div>`).join('')
+            }</div>`;
+        }
+    }
+};
+
 // Initial render
 renderSavedMarkers();
 

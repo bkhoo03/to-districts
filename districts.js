@@ -423,3 +423,54 @@ const MY_CLASS_BUILDINGS = [
 ];
 
 POINTS_OF_INTEREST.push(...MY_CLASS_BUILDINGS.map(p => ({ ...p, district: "Annex - U of T" })));
+
+// ---- Course Schedule (Fall 2026) ----
+const MY_COURSES = {
+    "SM": [
+        { code: "CSC454H1", name: "The Business of Software", time: "Tue 10:00AM–1:00PM", room: "SM 2360" }
+    ],
+    "MC": [
+        { code: "MIE360H1", name: "Systems Modelling & Simulation", time: "Mon 12–1PM", room: "MC 102" },
+        { code: "MIE370H1", name: "Intro to Machine Learning", time: "Thu 3–5PM", room: "MC 254" }
+    ],
+    "BA": [
+        { code: "MIE360H1", name: "Systems Modelling & Simulation", time: "Tue 1–2PM / Wed 1–2PM", room: "BA 1180 / BA 1170" },
+        { code: "MIE370H1", name: "Intro to Machine Learning", time: "Tue 5–6PM", room: "BA 1170" }
+    ],
+    "MY": [
+        { code: "MIE360H1", name: "Systems Modelling & Simulation", time: "Tue 9–10AM (TUT)", room: "MY 380" }
+    ],
+    "MB": [
+        { code: "MIE360H1", name: "Systems Modelling & Simulation", time: "Wed 11AM–1PM (PRA)", room: "MB 123" }
+    ],
+    "GB": [
+        { code: "MIE370H1", name: "Intro to Machine Learning", time: "Tue 3–5PM (PRA)", room: "GB 119 / GB 144" },
+        { code: "TEP440H1", name: "To Engineer is Human", time: "Mon 1–3PM / Thu 1–3PM", room: "GB 304" }
+    ],
+    "SF": []
+};
+
+// Full timetable for the popup
+const FULL_TIMETABLE = [
+    { day: "Monday", slots: [
+        { time: "12:00–1:00PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "MC 102" },
+        { time: "1:00–3:00PM", code: "TEP440", name: "To Engineer is Human", room: "GB 304" }
+    ]},
+    { day: "Tuesday", slots: [
+        { time: "9:00–10:00AM", code: "MIE360", name: "Systems Modelling (TUT)", room: "MY 380" },
+        { time: "10:00AM–1:00PM", code: "CSC454", name: "The Business of Software", room: "SM 2360" },
+        { time: "1:00–2:00PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "BA 1180" },
+        { time: "3:00–5:00PM", code: "MIE370", name: "Intro to ML (PRA)", room: "GB 119/144" },
+        { time: "5:00–6:00PM", code: "MIE370", name: "Intro to Machine Learning", room: "BA 1170" }
+    ]},
+    { day: "Wednesday", slots: [
+        { time: "11:00AM–1:00PM", code: "MIE360", name: "Systems Modelling (PRA)", room: "MB 123" },
+        { time: "1:00–2:00PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "BA 1170" }
+    ]},
+    { day: "Thursday", slots: [
+        { time: "1:00–2:00PM", code: "TEP440", name: "To Engineer is Human", room: "GB 304" },
+        { time: "2:00–3:00PM", code: "TEP440", name: "To Engineer is Human (TUT)", room: "GB 304" },
+        { time: "3:00–5:00PM", code: "MIE370", name: "Intro to Machine Learning", room: "MC 254" }
+    ]},
+    { day: "Friday", slots: [] }
+];

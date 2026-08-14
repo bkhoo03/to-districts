@@ -431,3 +431,56 @@ body.routing-active #map {
     border-radius: 50%; animation: spin 0.7s linear infinite;
     vertical-align: middle; margin-right: 6px;
 }
+
+/* Timetable button */
+#timetable-btn {
+    position: absolute; bottom: 20px; left: 228px; z-index: 998;
+    background: rgba(255,255,255,0.92); color: #333; border: 1px solid rgba(0,0,0,0.08);
+    padding: 8px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500; transition: all 0.15s;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: center;
+}
+#timetable-btn:hover { background: rgba(245,245,245,0.95); }
+body.dark-base #timetable-btn {
+    background: rgba(22,27,34,0.92); color: #f0f6fc; border-color: #30363d;
+}
+
+/* Timetable panel */
+#timetable-panel {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: #fff; color: #1a1a1a;
+    padding: 20px; border-radius: 14px; z-index: 1010;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25); border: 1px solid #e0e0e0;
+    width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto;
+}
+#timetable-panel.hidden { display: none; }
+#timetable-panel h3 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; padding-right: 30px; }
+#timetable-close {
+    position: absolute; top: 12px; right: 14px;
+    background: #eee; border: none; color: #555; font-size: 1.2rem;
+    cursor: pointer; padding: 2px 8px; border-radius: 6px;
+}
+#timetable-close:hover { background: #ddd; }
+
+.tt-day { margin-bottom: 14px; }
+.tt-day-name { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #1a73e8; margin-bottom: 6px; }
+.tt-slot {
+    display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem;
+}
+.tt-slot:last-child { border-bottom: none; }
+.tt-time { color: #666; min-width: 90px; font-weight: 500; }
+.tt-course { flex: 1; }
+.tt-code { font-weight: 700; }
+.tt-room { color: #888; font-size: 0.72rem; }
+.tt-empty { color: #aaa; font-size: 0.8rem; font-style: italic; }
+
+/* Course info in POI detail */
+.course-list { margin-top: 10px; }
+.course-item {
+    background: #f5f7fa; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;
+    font-size: 0.78rem; border-left: 3px solid #1a73e8;
+}
+.course-item .ci-code { font-weight: 700; }
+.course-item .ci-time { color: #555; }
+.course-item .ci-room { color: #888; font-size: 0.72rem; }
