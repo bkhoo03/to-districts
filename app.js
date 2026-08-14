@@ -49,6 +49,7 @@ const districtsLayer = L.layerGroup().addTo(map);
 const labelsLayer = L.layerGroup().addTo(map);
 const subwayLayer = L.layerGroup().addTo(map);
 const searchLayer = L.layerGroup().addTo(map); // temp markers from geocoder
+const highlightLayer = L.layerGroup().addTo(map); // pulsing circle on selected location
 
 // POI — one layer group per category so they can be toggled individually
 const poiLayersByCategory = {};
@@ -169,6 +170,7 @@ POINTS_OF_INTEREST.forEach((poi) => {
         }
         const district = DISTRICTS.find(d => d.name === poi.district);
         showPoiInfo(poi, district);
+        highlightLocation(poi.lat, poi.lng);
     });
     poiLayersByCategory[poi.cat].addLayer(marker);
 });
@@ -260,10 +262,20 @@ map.on('click', (e) => {
 
 function clearSelection() {
     infoPanel.classList.add('hidden');
+    highlightLayer.clearLayers();
     if (activeDistrict) {
         activeDistrict.setStyle({ fillOpacity: 0.18, weight: 1.5 });
         activeDistrict = null;
     }
+}
+
+function highlightLocation(lat, lng) {
+    highlightLayer.clearLayers();
+    L.circleMarker([lat, lng], {
+        radius: 18, color: '#1a73e8', weight: 3,
+        fillColor: '#1a73e8', fillOpacity: 0.12,
+        className: 'pulse-marker'
+    }).addTo(highlightLayer);
 }
 
 // ---------------------------------------------------------------------------
@@ -665,6 +677,7 @@ function exitRouting() {
     routeOrigin = null;
     routePanel.classList.add('hidden');
     routeLayer.clearLayers();
+    highlightLayer.clearLayers();
     document.body.classList.remove('routing-active');
 }
 
@@ -672,10 +685,23 @@ function exitRouting() {
 function handleRouteDestination(lat, lng, name) {
     if (!routeOrigin) return;
 
-    // Mark destination
+    // Mark destination with highlight
     L.circleMarker([lat, lng], {
         radius: 8, color: '#e8453a', weight: 3, fillColor: '#fff', fillOpacity: 1
     }).addTo(routeLayer);
+
+    // Pulsing circles on both points
+    highlightLayer.clearLayers();
+    L.circleMarker([routeOrigin.lat, routeOrigin.lng], {
+        radius: 16, color: '#1a73e8', weight: 2.5,
+        fillColor: '#1a73e8', fillOpacity: 0.1,
+        className: 'pulse-marker'
+    }).addTo(highlightLayer);
+    L.circleMarker([lat, lng], {
+        radius: 16, color: '#e8453a', weight: 2.5,
+        fillColor: '#e8453a', fillOpacity: 0.1,
+        className: 'pulse-marker'
+    }).addTo(highlightLayer);
 
     routeTitle.textContent = `${routeOrigin.name} → ${name || 'Destination'}`;
     routeInfo.innerHTML = '<span class="route-spinner"></span> Calculating route…';
@@ -754,6 +780,7 @@ async function reverseGeocode(lat, lng) {
     currentInfoPlace = { name: `${lat.toFixed(5)}, ${lng.toFixed(5)}`, sub: '', lat, lng };
     updateSaveButton();
     showDirectionsButton();
+    highlightLocation(lat, lng);
     infoPanel.classList.remove('hidden');
 
     // Reverse geocode via Nominatim
@@ -904,6 +931,7 @@ function renderSavedMarkers() {
             currentInfoPlace = p;
             updateSaveButton();
             showDirectionsButton();
+            highlightLocation(p.lat, p.lng);
             infoPanel.classList.remove('hidden');
         });
         savedLayer.addLayer(m);
