@@ -451,24 +451,48 @@ const MY_COURSES = {
 // Full timetable for the popup
 const FULL_TIMETABLE = [
     { day: "Monday", slots: [
-        { time: "12:00–1:00PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "MC 102" },
-        { time: "1:00–3:00PM", code: "TEP440", name: "To Engineer is Human", room: "GB 304" }
+        { time: "12:00 PM – 1:00 PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "MC 102", building: "MC" },
+        { time: "1:00 PM – 3:00 PM", code: "TEP440", name: "To Engineer is Human", room: "GB 304", building: "GB" }
     ]},
     { day: "Tuesday", slots: [
-        { time: "9:00–10:00AM", code: "MIE360", name: "Systems Modelling (TUT)", room: "MY 380" },
-        { time: "10:00AM–1:00PM", code: "CSC454", name: "The Business of Software", room: "SM 2360" },
-        { time: "1:00–2:00PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "BA 1180" },
-        { time: "3:00–5:00PM", code: "MIE370", name: "Intro to ML (PRA)", room: "GB 119/144" },
-        { time: "5:00–6:00PM", code: "MIE370", name: "Intro to Machine Learning", room: "BA 1170" }
+        { time: "9:00 AM – 10:00 AM", code: "MIE360", name: "Systems Modelling (TUT)", room: "MY 380", building: "MY" },
+        { time: "10:00 AM – 1:00 PM", code: "CSC454", name: "The Business of Software", room: "SM 2360", building: "SM" },
+        { time: "1:00 PM – 2:00 PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "BA 1180", building: "BA" },
+        { time: "3:00 PM – 5:00 PM", code: "MIE370", name: "Intro to ML (PRA)", room: "GB 119/144", building: "GB" },
+        { time: "5:00 PM – 6:00 PM", code: "MIE370", name: "Intro to Machine Learning", room: "BA 1170", building: "BA" }
     ]},
     { day: "Wednesday", slots: [
-        { time: "11:00AM–1:00PM", code: "MIE360", name: "Systems Modelling (PRA)", room: "MB 123" },
-        { time: "1:00–2:00PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "BA 1170" }
+        { time: "11:00 AM – 1:00 PM", code: "MIE360", name: "Systems Modelling (PRA)", room: "MB 123", building: "MB" },
+        { time: "1:00 PM – 2:00 PM", code: "MIE360", name: "Systems Modelling & Simulation", room: "BA 1170", building: "BA" }
     ]},
     { day: "Thursday", slots: [
-        { time: "1:00–2:00PM", code: "TEP440", name: "To Engineer is Human", room: "GB 304" },
-        { time: "2:00–3:00PM", code: "TEP440", name: "To Engineer is Human (TUT)", room: "GB 304" },
-        { time: "3:00–5:00PM", code: "MIE370", name: "Intro to Machine Learning", room: "MC 254" }
+        { time: "1:00 PM – 2:00 PM", code: "TEP440", name: "To Engineer is Human", room: "GB 304", building: "GB" },
+        { time: "2:00 PM – 3:00 PM", code: "TEP440", name: "To Engineer is Human (TUT)", room: "GB 304", building: "GB" },
+        { time: "3:00 PM – 5:00 PM", code: "MIE370", name: "Intro to Machine Learning", room: "MC 254", building: "MC" }
     ]},
     { day: "Friday", slots: [] }
+];
+
+// Courses grouped by module (for "by module" view)
+const COURSES_BY_MOD = [
+    { code: "CSC454H1", name: "The Business of Software", color: "#8b5cf6", sessions: [
+        { day: "Tue", time: "10:00 AM – 1:00 PM", type: "LEC", room: "SM 2360", building: "SM" }
+    ]},
+    { code: "MIE360H1", name: "Systems Modelling & Simulation", color: "#0ea5e9", sessions: [
+        { day: "Mon", time: "12:00 PM – 1:00 PM", type: "LEC", room: "MC 102", building: "MC" },
+        { day: "Tue", time: "1:00 PM – 2:00 PM", type: "LEC", room: "BA 1180", building: "BA" },
+        { day: "Wed", time: "1:00 PM – 2:00 PM", type: "LEC", room: "BA 1170", building: "BA" },
+        { day: "Tue", time: "9:00 AM – 10:00 AM", type: "TUT", room: "MY 380", building: "MY" },
+        { day: "Wed", time: "11:00 AM – 1:00 PM", type: "PRA", room: "MB 123", building: "MB" }
+    ]},
+    { code: "MIE370H1", name: "Intro to Machine Learning", color: "#10b981", sessions: [
+        { day: "Tue", time: "5:00 PM – 6:00 PM", type: "LEC", room: "BA 1170", building: "BA" },
+        { day: "Thu", time: "3:00 PM – 5:00 PM", type: "LEC", room: "MC 254", building: "MC" },
+        { day: "Tue", time: "3:00 PM – 5:00 PM", type: "PRA", room: "GB 119/144", building: "GB" }
+    ]},
+    { code: "TEP440H1", name: "To Engineer is Human", color: "#f59e0b", sessions: [
+        { day: "Mon", time: "1:00 PM – 3:00 PM", type: "LEC", room: "GB 304", building: "GB" },
+        { day: "Thu", time: "1:00 PM – 2:00 PM", type: "LEC", room: "GB 304", building: "GB" },
+        { day: "Thu", time: "2:00 PM – 3:00 PM", type: "TUT", room: "GB 304", building: "GB" }
+    ]}
 ];

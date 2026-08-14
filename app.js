@@ -1037,34 +1037,99 @@ map.on('movestart', () => { savedPlacesPanel.classList.add('hidden'); });
 const timetableBtn = document.getElementById('timetable-btn');
 const timetablePanel = document.getElementById('timetable-panel');
 const timetableContent = document.getElementById('timetable-content');
+let ttCurrentView = 'days';
+
+function getBuildingLatLng(code) {
+    const b = MY_CLASS_BUILDINGS.find(b => b.name.startsWith(code + ' |'));
+    return b ? { lat: b.lat, lng: b.lng, name: b.name } : null;
+}
+
+function renderTimetable() {
+    if (ttCurrentView === 'days') {
+        timetableContent.innerHTML = FULL_TIMETABLE.map(day => {
+            if (day.slots.length === 0) {
+                return `<div class="tt-day"><div class="tt-day-name">${day.day}</div><div class="tt-empty">No classes</div></div>`;
+            }
+            return `<div class="tt-day"><div class="tt-day-name">${day.day}</div>${
+                day.slots.map(s => `<div class="tt-slot">
+                    <span class="tt-time">${s.time}</span>
+                    <span class="tt-course"><span class="tt-code">${s.code}</span> ${s.name}<br><span class="tt-room-link" data-building="${s.building}">${s.room}</span></span>
+                </div>`).join('')
+            }</div>`;
+        }).join('');
+    } else {
+        timetableContent.innerHTML = COURSES_BY_MOD.map(mod => `
+            <div class="tt-mod-card" style="border-left-color:${mod.color}">
+                <div class="tt-mod-title" style="color:${mod.color}">${mod.code} — ${mod.name}</div>
+                ${mod.sessions.map(s => `<div class="tt-mod-session">
+                    <span class="tt-mod-type">${s.type}</span>
+                    ${s.day} ${s.time} · <span class="tt-room-link" data-building="${s.building}">${s.room}</span>
+                </div>`).join('')}
+            </div>
+        `).join('');
+    }
+
+    // Bind room link clicks
+    timetableContent.querySelectorAll('.tt-room-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const buildingCode = link.dataset.building;
+            const b = getBuildingLatLng(buildingCode);
+            if (b) {
+                // Minimise timetable panel
+                timetablePanel.classList.add('minimised');
+                // Fly to building
+                map.setView([b.lat, b.lng], 17);
+            }
+        });
+    });
+}
 
 timetableBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     layersPanel.classList.add('hidden');
     dlPanel.classList.add('hidden');
     savedPlacesPanel.classList.add('hidden');
-
-    // Render timetable
-    timetableContent.innerHTML = FULL_TIMETABLE.map(day => {
-        if (day.slots.length === 0) {
-            return `<div class="tt-day"><div class="tt-day-name">${day.day}</div><div class="tt-empty">No classes</div></div>`;
-        }
-        return `<div class="tt-day"><div class="tt-day-name">${day.day}</div>${
-            day.slots.map(s => `<div class="tt-slot">
-                <span class="tt-time">${s.time}</span>
-                <span class="tt-course"><span class="tt-code">${s.code}</span> ${s.name}<br><span class="tt-room">${s.room}</span></span>
-            </div>`).join('')
-        }</div>`;
-    }).join('');
-
+    renderTimetable();
     timetablePanel.classList.remove('hidden');
+    timetablePanel.classList.remove('minimised');
 });
 
-document.getElementById('timetable-close').addEventListener('click', () => {
-    timetablePanel.classList.add('hidden');
+// Tab switching
+document.querySelectorAll('.tt-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tt-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        ttCurrentView = tab.dataset.view;
+        renderTimetable();
+    });
 });
-map.on('click', () => { timetablePanel.classList.add('hidden'); });
-map.on('movestart', () => { timetablePanel.classList.add('hidden'); });
+
+// Click minimised panel to expand
+timetablePanel.addEventListener('click', () => {
+    if (timetablePanel.classList.contains('minimised')) {
+        timetablePanel.classList.remove('minimised');
+    }
+});
+
+document.getElementById('timetable-close').addEventListener('click', (e) => {
+    e.stopPropagation();
+    timetablePanel.classList.add('hidden');
+    timetablePanel.classList.remove('minimised');
+});
+map.on('click', () => {
+    if (timetablePanel.classList.contains('minimised')) {
+        timetablePanel.classList.remove('minimised');
+    } else {
+        timetablePanel.classList.add('hidden');
+    }
+});
+map.on('movestart', () => {
+    // Don't hide when minimised — that's intentional
+    if (!timetablePanel.classList.contains('minimised')) {
+        timetablePanel.classList.add('hidden');
+    }
+});
 
 // ---------------------------------------------------------------------------
 // Show course info when tapping a class building
