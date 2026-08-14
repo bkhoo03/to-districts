@@ -1037,7 +1037,7 @@ map.on('movestart', () => { savedPlacesPanel.classList.add('hidden'); });
 const timetableBtn = document.getElementById('timetable-btn');
 const timetablePanel = document.getElementById('timetable-panel');
 const timetableContent = document.getElementById('timetable-content');
-let ttCurrentView = 'days';
+let ttCurrentView = 'modules';
 
 function getBuildingLatLng(code) {
     const b = MY_CLASS_BUILDINGS.find(b => b.name.startsWith(code + ' |'));
@@ -1076,8 +1076,28 @@ function renderTimetable() {
             const buildingCode = link.dataset.building;
             const b = getBuildingLatLng(buildingCode);
             if (b) {
+                // Minimise timetable panel with animation
                 timetablePanel.classList.add('minimised');
-                map.setView([b.lat, b.lng], 17);
+
+                // Fly to building
+                map.flyTo([b.lat, b.lng], 17, { duration: 0.8 });
+
+                // Highlight the building with a pulsing circle
+                searchLayer.clearLayers();
+                const pulse = L.circleMarker([b.lat, b.lng], {
+                    radius: 18, color: '#e63946', weight: 3,
+                    fillColor: '#e63946', fillOpacity: 0.15,
+                    className: 'pulse-marker'
+                }).addTo(searchLayer);
+
+                // Also add a label
+                L.marker([b.lat, b.lng], {
+                    icon: L.divIcon({
+                        className: 'highlight-label',
+                        html: `<span>${b.name}</span>`,
+                        iconSize: [0, 0], iconAnchor: [0, -24]
+                    })
+                }).addTo(searchLayer);
             }
         });
     });
